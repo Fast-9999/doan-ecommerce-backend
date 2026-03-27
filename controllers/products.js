@@ -9,7 +9,10 @@ module.exports = {
         let data = await modelProduct.find({});
         let queries = req.query;
         let titleQ = queries.title ? queries.title.toLowerCase() : '';
-        let maxPrice = queries.maxPrice ? queries.maxPrice : 1E4;
+        
+        // CẬP NHẬT Ở ĐÂY NÈ NÍ: Đổi 1E4 thành 1E9 (1 tỷ) để không bị mất sản phẩm giá cao
+        let maxPrice = queries.maxPrice ? queries.maxPrice : 1E9; 
+        
         let minPrice = queries.minPrice ? queries.minPrice : 0;
         let limit = queries.limit ? parseInt(queries.limit) : 5;
         let page = queries.page ? parseInt(queries.page) : 1;
