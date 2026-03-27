@@ -1,23 +1,25 @@
 var express = require("express");
 var router = express.Router();
-let { uploadImage, uploadExcel } = require('../utils/uploadHandler')
-let path = require('path')
-let excelJS = require('exceljs')
+let { uploadImage, uploadExcel } = require('../utils/uploadHandler');
+let path = require('path');
+let excelJS = require('exceljs');
 let fs = require('fs');
-let productModel = require('../schemas/products')
-let InventoryModel = require('../schemas/inventories')
-let mongoose = require('mongoose')
-let slugify = require('slugify')
+let productModel = require('../schemas/products');
+let InventoryModel = require('../schemas/inventories');
+let mongoose = require('mongoose');
+let slugify = require('slugify');
 
-router.post('/single', uploadImage.single('file'), function (req, res, next) {
-    if (!req.file) {
-        res.status(404).send({
-            message: "file upload rong"
-        })
-    } else {
-        res.send(req.file.path)
-    }
-})
+// Gọi cái controller chuyên xử lý up ảnh lên Cloudinary vô đây
+let uploadController = require('../controllers/upload');
+
+// ĐÃ SỬA API NÀY: Dùng controller mới để đẩy thẳng lên Cloudinary
+router.post('/single', uploadImage.single('file'), uploadController.uploadSingleImage);
+
+
+// ==============================================================
+// TỪ ĐÂY TRỞ XUỐNG LÀ CODE CỦA THẦY, GIỮ NGUYÊN 100% KHÔNG ĐỤNG TỚI
+// ==============================================================
+
 router.post('/multiple', uploadImage.array('files'), function (req, res, next) {
     if (!req.files) {
         res.status(404).send({
@@ -36,11 +38,11 @@ router.post('/multiple', uploadImage.array('files'), function (req, res, next) {
         res.send(result)
     }
 })
+
 router.get('/:filename', function (req, res, next) {
     let fileName = req.params.filename;
     let pathFile = path.join(__dirname, '../uploads', fileName)
     res.sendFile(pathFile)
-
 })
 
 router.post('/excel', uploadExcel.single('file'), async function (req, res, next) {
@@ -127,9 +129,7 @@ router.post('/excel', uploadExcel.single('file'), async function (req, res, next
         })
         res.send(result)
         fs.unlinkSync(pathFile);
-
     }
 })
-
 
 module.exports = router;
