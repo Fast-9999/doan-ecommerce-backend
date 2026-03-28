@@ -14,9 +14,14 @@ module.exports = {
             if (!req.file) {
                 return res.status(400).send({ message: "Chưa chọn file ảnh" });
             }
-            // Đẩy file lên Cloudinary
-            const result = await cloudinary.uploader.upload(req.file.path, {
-                folder: 'doan_ecommerce' // Ảnh sẽ được lưu vô thư mục này trên mây
+            
+            // XÀI CHIÊU STREAM ĐỂ BẮN TỪ RAM LÊN CLOUD (KHÔNG QUA Ổ CỨNG)
+            const b64 = Buffer.from(req.file.buffer).toString("base64");
+            let dataURI = "data:" + req.file.mimetype + ";base64," + b64;
+            
+            const result = await cloudinary.uploader.upload(dataURI, {
+                folder: 'doan_ecommerce',
+                resource_type: "auto"
             });
             
             // Trả về link URL của ảnh

@@ -1,17 +1,9 @@
 let multer = require('multer')
 let path = require('path')
 
-//storage - luu o dau, luu ten gi
-let storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'uploads/')
-    },
-    filename: function (req, file, cb) {
-        let ext = path.extname(file.originalname)
-        let fileName = Date.now() + "-" + Math.round(Math.random() * 1000_000_000) + ext;
-        cb(null, fileName)
-    }
-})
+// ĐỔI CHIẾN THUẬT: KHÔNG LƯU Ổ CỨNG NỮA, LƯU TẠM VÔ RAM (MEMORY)
+let storage = multer.memoryStorage(); // Vercel rất thích điều này!
+
 let filterImage = function (req, file, cb) {
     if (file.mimetype.includes("image")) {
         cb(null, true)
@@ -29,12 +21,12 @@ let filterExcel = function (req, file, cb) {
 module.exports = {
     uploadImage: multer({
         storage: storage,
-        limits: 5 * 1024 * 1024,
+        limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
         fileFilter: filterImage
     }),
     uploadExcel: multer({
         storage: storage,
-        limits: 5 * 1024 * 1024,
+        limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
         fileFilter: filterExcel
     })
 }
