@@ -52,5 +52,20 @@ module.exports = {
         } catch (error) {
             res.status(400).send({ success: false, message: error.message });
         }
+    },
+
+    // 5. [DELETE] Xóa đơn hàng vĩnh viễn (MỚI THÊM NÈ NÍ)
+    deleteOrder: async (req, res) => {
+        try {
+            let deletedOrder = await OrderModel.findByIdAndDelete(req.params.id);
+            
+            if (!deletedOrder) {
+                return res.status(404).send({ success: false, message: "Không tìm thấy đơn hàng để xóa" });
+            }
+            
+            res.status(200).send({ success: true, message: "Đã xóa đơn hàng thành công!" });
+        } catch (error) {
+            res.status(500).send({ success: false, message: error.message });
+        }
     }
 };

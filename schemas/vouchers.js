@@ -25,4 +25,4 @@ let voucherSchema = mongoose.Schema({
     timestamps: true
 });
 
-module.exports = mongoose.model('voucher', voucherSchema);
+module.exports = mongoose.model('voucher', voucherSchema);kk
