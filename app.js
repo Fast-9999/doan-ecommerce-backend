@@ -39,6 +39,7 @@ app.use('/api/v1/carts', require('./routes/carts'));
 app.use('/api/v1/upload', require('./routes/upload'));
 app.use('/api/v1/orders', require('./routes/orders')); 
 app.use('/api/v1/reviews', require('./routes/reviews')); // 🚀 <== ĐÃ MỞ CỔNG CHO ĐÁNH GIÁ (REVIEWS)
+app.use('/api/v1/vouchers', require('./routes/vouchers')); // 🚀 Kích hoạt siêu năng lực Giảm giá
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
