@@ -1,7 +1,7 @@
 let OrderModel = require('../schemas/orders');
 
 module.exports = {
-    // 1. [GET] Lấy tất cả đơn hàng
+    // 1. [GET] Lấy tất cả đơn hàng (Admin dùng)
     getAllOrders: async (req, res) => {
         try {
             // 🚀 ĐỘ LẠI: Lấy thêm thông tin user nhưng giữ nguyên ID để Frontend dễ lọc
@@ -80,6 +80,25 @@ module.exports = {
                 return res.status(404).send({ success: false, message: "Không tìm thấy đơn hàng để xóa" });
             }
             res.status(200).send({ success: true, message: "Đã xóa đơn hàng thành công!" });
+        } catch (error) {
+            res.status(500).send({ success: false, message: error.message });
+        }
+    },
+
+    // 🚀 THÊM MỚI NÈ: 6. [GET] Lấy danh sách đơn hàng theo ID của User
+    // (Dành riêng cho trang Lịch Sử Mua Hàng bên Frontend)
+    getOrdersByUser: async (req, res) => {
+        try {
+            let userId = req.params.userId;
+            
+            // Tìm tất cả các đơn hàng mà cột 'user' bằng đúng cái userId gửi lên
+            let orders = await OrderModel.find({ user: userId })
+                .populate('user', 'username email name')
+                .populate('items.product', 'title price images')
+                .populate('orderItems.product', 'title price images')
+                .sort({ createdAt: -1 }); // Mới nhất đưa lên đầu
+                
+            res.status(200).send({ success: true, data: orders });
         } catch (error) {
             res.status(500).send({ success: false, message: error.message });
         }
