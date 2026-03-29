@@ -1,4 +1,4 @@
-const ReviewModel = require('../schemas/review'); // Đường dẫn trỏ tới schema của ông
+const ReviewModel = require('../schemas/reviews'); // Đường dẫn trỏ tới schema của ông
 
 module.exports = {
   // 1. API: Khách hàng gửi đánh giá mới
