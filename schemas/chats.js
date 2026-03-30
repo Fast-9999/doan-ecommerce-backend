@@ -1,23 +1,30 @@
 let mongoose = require('mongoose');
 
 let chatSchema = mongoose.Schema({
-    sender: { 
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'user', 
-        required: true 
+    sender: { // Tương đương 'from'
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'user',
+        required: true
     },
-    receiver: { 
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'user', 
-        required: true 
+    receiver: { // Tương đương 'to'
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'user',
+        required: true
     },
-    message: { 
-        type: String, 
-        required: true 
+    messageContent: {
+        type: { 
+            type: String, 
+            enum: ['text', 'file'], 
+            default: 'text' 
+        },
+        text: { 
+            type: String, 
+            required: true 
+        } // Nếu type là 'file' thì cái này sẽ lưu đường dẫn link ảnh/file
     },
-    isRead: { 
-        type: Boolean, 
-        default: false 
+    isRead: {
+        type: Boolean,
+        default: false
     }
 }, {
     timestamps: true
