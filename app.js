@@ -45,6 +45,7 @@ app.use('/api/v1/orders', require('./routes/orders'));
 app.use('/api/v1/reviews', require('./routes/reviews')); 
 app.use('/api/v1/vouchers', require('./routes/vouchers')); 
 app.use('/api/v1/chats', require('./routes/chats')); // 🚀 <== ĐÃ MỞ CỔNG CHO TRUNG TÂM NHẮN TIN (CHATS)
+app.use('/api/v1/reservations', require('./routes/reservations')); // 🚀 <== CỔNG MỚI CHO GIỮ HÀNG
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
