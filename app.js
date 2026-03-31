@@ -13,8 +13,12 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-// Cấp phép cho mọi domain (Frontend) được phép gọi API
-app.use(cors()); 
+// 🚀 ĐÃ CẬP NHẬT: Cấp phép cho mọi domain (Frontend) được phép gọi API kèm Token
+app.use(cors({
+  origin: '*', // Cho phép tất cả các trang web gọi vào
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Cho phép các hành động này
+  allowedHeaders: ['Content-Type', 'Authorization'] // Quan trọng nhất: Cho phép mang theo Token xác thực!
+}));
 
 app.use(logger('dev'));
 app.use(express.json());
