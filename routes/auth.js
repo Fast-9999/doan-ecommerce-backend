@@ -11,15 +11,25 @@ let mailHandler = require('../utils/sendMailHandler')
 /* GET home page. */
 //localhost:3000
 router.post('/register', async function (req, res) {
-    await userController.CreateAnUser(
-        req.body.username,
-        req.body.password,
-        req.body.email,
-        "69cd1583dbd107c95c61f600"
-    )
-    res.send({
-        message: "dang ki thanh cong"
-    })
+    try {
+        await userController.CreateAnUser(
+            req.body.username,
+            req.body.password,
+            req.body.email,
+            "69cd1583dbd107c95c61f600"
+        )
+        res.send({
+            message: "dang ki thanh cong"
+        })
+    } catch (error) {
+        // Nếu lỗi trùng Email/Username từ MongoDB (E11000)
+        if (error.code === 11000) {
+            return res.status(400).send({
+                message: "Email hoặc Tên đăng nhập đã tồn tại trong hệ thống!"
+            });
+        }
+        res.status(500).send({ message: error.message });
+    }
 });
 router.post('/login', async function (req, res) {
     let result = await userController.QueryByUserNameAndPassword(
