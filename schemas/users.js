@@ -65,12 +65,11 @@ userSchema.index({
     email: 1
 })
 
-userSchema.pre('save', function (next) {
+userSchema.pre('save', function () {
     let salt = bcrypt.genSaltSync(10);
     this.password = bcrypt.hashSync(
         this.password, salt
-    )
-    next();
-})
+    );
+});
 
 module.exports = mongoose.model("user", userSchema);
