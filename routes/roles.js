@@ -4,13 +4,13 @@ var router = express.Router();
 let roleModel = require("../schemas/roles");
 
 
-router.get("/", async function (req, res, next) {
+router.get("/", async function (req, res) {
     let roles = await roleModel.find({ isDeleted: false });
     res.send(roles);
 });
 
 
-router.get("/:id", async function (req, res, next) {
+router.get("/:id", async function (req, res) {
     try {
         let result = await roleModel.find({ _id: req.params.id, isDeleted: false });
         if (result.length > 0) {
@@ -25,7 +25,7 @@ router.get("/:id", async function (req, res, next) {
 });
 
 
-router.post("/", async function (req, res, next) {
+router.post("/", async function (req, res) {
     try {
         let newItem = new roleModel({
             name: req.body.name,
@@ -38,7 +38,7 @@ router.post("/", async function (req, res, next) {
     }
 });
 
-router.put("/:id", async function (req, res, next) {
+router.put("/:id", async function (req, res) {
     try {
         let id = req.params.id;
         let updatedItem = await roleModel.findByIdAndUpdate(id, req.body, { new: true });
@@ -51,7 +51,7 @@ router.put("/:id", async function (req, res, next) {
     }
 });
 
-router.delete("/:id", async function (req, res, next) {
+router.delete("/:id", async function (req, res) {
     try {
         let id = req.params.id;
         let updatedItem = await roleModel.findByIdAndUpdate(

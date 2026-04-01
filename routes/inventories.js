@@ -3,7 +3,7 @@ var router = express.Router();
 let inventoryModel = require('../schemas/inventories')
 
 // 1. Xem tất cả kho
-router.get('/', async function (req, res, next) {
+router.get('/', async function (req, res) {
     try {
         let inventories = await inventoryModel.find({}).populate({
             path: 'product',
@@ -16,7 +16,7 @@ router.get('/', async function (req, res, next) {
 });
 
 // 2. Nạp thêm hàng vào kho (+)
-router.post('/increase-stock', async function (req, res, next) {
+router.post('/increase-stock', async function (req, res) {
     try {
         let { product, quantity } = req.body;
         let getProduct = await inventoryModel.findOne({ product: product });
@@ -34,7 +34,7 @@ router.post('/increase-stock', async function (req, res, next) {
 });
 
 // 3. Trừ hàng trong kho khi có đơn (-)
-router.post('/decrease-stock', async function (req, res, next) {
+router.post('/decrease-stock', async function (req, res) {
     try {
         let { product, quantity } = req.body;
         let getProduct = await inventoryModel.findOne({ product: product });

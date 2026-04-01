@@ -20,7 +20,7 @@ router.post('/single', uploadImage.single('file'), uploadController.uploadSingle
 // TỪ ĐÂY TRỞ XUỐNG LÀ CODE CỦA THẦY, GIỮ NGUYÊN 100% KHÔNG ĐỤNG TỚI
 // ==============================================================
 
-router.post('/multiple', uploadImage.array('files'), function (req, res, next) {
+router.post('/multiple', uploadImage.array('files'), function (req, res) {
     if (!req.files) {
         res.status(404).send({
             message: "file upload rong"
@@ -39,13 +39,13 @@ router.post('/multiple', uploadImage.array('files'), function (req, res, next) {
     }
 })
 
-router.get('/:filename', function (req, res, next) {
+router.get('/:filename', function (req, res) {
     let fileName = req.params.filename;
     let pathFile = path.join(__dirname, '../uploads', fileName)
     res.sendFile(pathFile)
 })
 
-router.post('/excel', uploadExcel.single('file'), async function (req, res, next) {
+router.post('/excel', uploadExcel.single('file'), async function (req, res) {
     if (!req.file) {
         res.status(404).send({
             message: "file upload rong"
@@ -60,8 +60,7 @@ router.post('/excel', uploadExcel.single('file'), async function (req, res, next
         let getTitle = products.map(p => p.title)
         let getSku = products.map(p => p.sku)
         let result = [];
-        let errors = [];
-        for (let index = 2; index <= worksheet.rowCount; index++) {
+                for (let index = 2; index <= worksheet.rowCount; index++) {
             let errorRow = [];
             const row = worksheet.getRow(index)
             let sku = row.getCell(1).value;//unique

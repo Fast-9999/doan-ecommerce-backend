@@ -5,7 +5,7 @@ let slugify = require('slugify');
 
 module.exports = {
     // [GET] Lấy danh sách sản phẩm (có lọc và phân trang của thầy)
-    getAllProducts: async function (req, res, next) {
+    getAllProducts: async function (req, res) {
         let data = await modelProduct.find({});
         let queries = req.query;
         let titleQ = queries.title ? queries.title.toLowerCase() : '';
@@ -29,7 +29,7 @@ module.exports = {
     },
 
     // [GET] Lấy chi tiết 1 sản phẩm
-    getProductById: async function (req, res, next) {
+    getProductById: async function (req, res) {
         try {
             let id = req.params.id;
             let result = await modelProduct.findById(id);
@@ -44,7 +44,7 @@ module.exports = {
     },
 
     // [POST] Thêm mới sản phẩm (Dùng Transaction)
-    createProduct: async function (req, res, next) {
+    createProduct: async function (req, res) {
         let session = await mongoose.startSession();
         session.startTransaction();
         try {
@@ -81,7 +81,7 @@ module.exports = {
     },
 
     // [PUT] Cập nhật sản phẩm
-    updateProduct: async function (req, res, next) {
+    updateProduct: async function (req, res) {
         let id = req.params.id;
         try {
             let result = await modelProduct.findByIdAndUpdate(
@@ -94,7 +94,7 @@ module.exports = {
     },
 
     // [DELETE] Xóa mềm sản phẩm
-    deleteProduct: async function (req, res, next) {
+    deleteProduct: async function (req, res) {
         let id = req.params.id;
         try {
             let result = await modelProduct.findByIdAndUpdate(

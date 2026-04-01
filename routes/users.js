@@ -11,7 +11,7 @@ const { default: mongoose } = require("mongoose");
 //- Strong password
 
 router.get("/", checkLogin,
-  checkRole("ADMIN", "MODERATOR"), async function (req, res, next) {
+  checkRole("ADMIN", "MODERATOR"), async function (req, res) {
     let users = await userModel
       .find({ isDeleted: false })
       .populate({
@@ -21,7 +21,7 @@ router.get("/", checkLogin,
     res.send(users);
   });
 
-router.get("/:id", checkLogin, async function (req, res, next) {
+router.get("/:id", checkLogin, async function (req, res) {
   try {
     let result = await userModel
       .find({ _id: req.params.id, isDeleted: false })
@@ -37,10 +37,9 @@ router.get("/:id", checkLogin, async function (req, res, next) {
 });
 
 router.post("/",  postUserValidator, validateResult,
-  async function (req, res, next) {
+  async function (req, res) {
     let session = await mongoose.startSession()
-    let transaction = session.startTransaction()
-    try {
+        try {
       let newItem = await userController.CreateAnUser(
         req.body.username,
         req.body.password,
@@ -63,7 +62,7 @@ router.post("/",  postUserValidator, validateResult,
     }
   });
 
-router.put("/:id", async function (req, res, next) {
+router.put("/:id", async function (req, res) {
   try {
     let id = req.params.id;
     let updatedItem = await userModel.findById(id);
@@ -82,7 +81,7 @@ router.put("/:id", async function (req, res, next) {
   }
 });
 
-router.delete("/:id", async function (req, res, next) {
+router.delete("/:id", async function (req, res) {
   try {
     let id = req.params.id;
     let updatedItem = await userModel.findByIdAndUpdate(

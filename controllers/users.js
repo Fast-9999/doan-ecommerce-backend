@@ -33,11 +33,6 @@ module.exports = {
             _id: id,
             isDeleted: false
         }).populate('role')
-    }, FindUserById: async function (id) {
-        return await userModel.findOne({
-            _id: id,
-            isDeleted: false
-        }).populate('role')
     },
     FindUserByEmail: async function (email) {
         return await userModel.findOne({

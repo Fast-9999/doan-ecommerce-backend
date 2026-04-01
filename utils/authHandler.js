@@ -1,7 +1,7 @@
 let jwt = require('jsonwebtoken')
 let userController = require('../controllers/users')
 module.exports = {
-    checkLogin: async function (req, res, next) {
+    checkLogin: function (req, res, next) {
         let token
         if (req.cookies.token) {
             token = req.cookies.token

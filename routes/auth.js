@@ -10,8 +10,8 @@ let mailHandler = require('../utils/sendMailHandler')
 
 /* GET home page. */
 //localhost:3000
-router.post('/register', async function (req, res, next) {
-    let newUser = await userController.CreateAnUser(
+router.post('/register', async function (req, res) {
+    await userController.CreateAnUser(
         req.body.username,
         req.body.password,
         req.body.email,
@@ -21,7 +21,7 @@ router.post('/register', async function (req, res, next) {
         message: "dang ki thanh cong"
     })
 });
-router.post('/login', async function (req, res, next) {
+router.post('/login', async function (req, res) {
     let result = await userController.QueryByUserNameAndPassword(
         req.body.username, req.body.password
     )
@@ -41,19 +41,19 @@ router.post('/login', async function (req, res, next) {
     }
 
 });
-router.get('/me', checkLogin, async function (req, res, next) {
+router.get('/me', checkLogin, async function (req, res) {
     console.log(req.userId);
     let getUser = await userController.FindUserById(req.userId);
     res.send(getUser);
 })
-router.post('/logout', checkLogin, function (req, res, next) {
+router.post('/logout', checkLogin, function (req, res) {
     res.cookie('token', null, {
         maxAge: 0,
         httpOnly: true
     })
     res.send("da logout ")
 })
-router.post('/changepassword', checkLogin, changePasswordValidator, validateResult, async function (req, res, next) {
+router.post('/changepassword', checkLogin, changePasswordValidator, validateResult, async function (req, res) {
     let { oldpassword, newpassword } = req.body;
     let user = await userController.FindUserById(req.userId);
     console.log(user);
@@ -66,7 +66,7 @@ router.post('/changepassword', checkLogin, changePasswordValidator, validateResu
     }
 
 })
-router.post('/forgotpassword', async function (req, res, next) {
+router.post('/forgotpassword', async function (req, res) {
     let email = req.body.email;
     let user = await userController.FindUserByEmail(email);
     if (!user) {
@@ -82,7 +82,7 @@ router.post('/forgotpassword', async function (req, res, next) {
     mailHandler.sendMail(user.email,URL);
     res.send("check mail")
 })
-router.post('/resetpassword/:token',resetPasswordValidator,validateResult, async function (req, res, next) {
+router.post('/resetpassword/:token',resetPasswordValidator,validateResult, async function (req, res) {
     let password = req.body.password;
     let token =req.params.token;
     let user = await userController.FindUserByToken(token);

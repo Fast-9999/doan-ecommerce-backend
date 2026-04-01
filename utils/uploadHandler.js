@@ -1,5 +1,4 @@
 let multer = require('multer')
-let path = require('path')
 
 // ĐỔI CHIẾN THUẬT: KHÔNG LƯU Ổ CỨNG NỮA, LƯU TẠM VÔ RAM (MEMORY)
 let storage = multer.memoryStorage(); // Vercel rất thích điều này!
