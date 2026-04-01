@@ -15,7 +15,7 @@ router.post('/register', async function (req, res) {
         req.body.username,
         req.body.password,
         req.body.email,
-        "69a5462f086d74c9e772b804"
+        "69cd1583dbd107c95c61f600"
     )
     res.send({
         message: "dang ki thanh cong"
