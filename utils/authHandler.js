@@ -13,12 +13,16 @@ module.exports = {
             }
             token = token.split(' ')[1];
         }
-        let result = jwt.verify(token, 'secret');
-        if (result && result.exp * 1000 > Date.now()) {
-            req.userId = result.id;
-            next();
-        } else {
-            res.status(403).send("ban chua dang nhap")
+        try {
+            let result = jwt.verify(token, 'secret');
+            if (result && result.exp * 1000 > Date.now()) {
+                req.userId = result.id;
+                next();
+            } else {
+                res.status(403).send("ban chua dang nhap");
+            }
+        } catch (error) {
+            return res.status(401).send(error.message);
         }
     },
     checkRole: function (...requiredRole) {

@@ -78,15 +78,15 @@ router.post('/forgotpassword', async function (req, res) {
     user.forgotpasswordToken = crypto.randomBytes(21).toString('hex');
     user.forgotpasswordTokenExp = new Date(Date.now() + 10 * 60 * 1000);
     await user.save();
-    let URL = 'http://localhost:3000/api/v1/auth/resetpassword/'+ user.forgotpasswordToken;
-    mailHandler.sendMail(user.email,URL);
+    let URL = 'http://localhost:3000/api/v1/auth/resetpassword/' + user.forgotpasswordToken;
+    mailHandler.sendMail(user.email, URL);
     res.send("check mail")
 })
-router.post('/resetpassword/:token',resetPasswordValidator,validateResult, async function (req, res) {
+router.post('/resetpassword/:token', resetPasswordValidator, validateResult, async function (req, res) {
     let password = req.body.password;
-    let token =req.params.token;
+    let token = req.params.token;
     let user = await userController.FindUserByToken(token);
-    if(!user){
+    if (!user) {
         res.status(404).send("token reset password sai");
         return;
     }
