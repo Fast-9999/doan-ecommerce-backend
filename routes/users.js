@@ -11,7 +11,7 @@ const { default: mongoose } = require("mongoose");
 //- Strong password
 
 router.get("/", checkLogin,
-  checkRole("ADMIN", "MODERATOR"), async function (req, res) {
+  checkRole("admin", "ADMIN", "MODERATOR"), async function (req, res) { // 👈 Thêm chữ "admin" viết thường vào đây
     let users = await userModel
       .find({ isDeleted: false })
       .populate({
@@ -36,10 +36,10 @@ router.get("/:id", checkLogin, async function (req, res) {
   }
 });
 
-router.post("/",  postUserValidator, validateResult,
+router.post("/", postUserValidator, validateResult,
   async function (req, res) {
     let session = await mongoose.startSession()
-        try {
+    try {
       let newItem = await userController.CreateAnUser(
         req.body.username,
         req.body.password,
