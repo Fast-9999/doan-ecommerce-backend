@@ -13,16 +13,16 @@ module.exports = {
         }
     },
 
-    // 1. Khách hàng kiểm tra mã giảm giá
+    // 1. Khách hàng kiểm tra mã giảm giá (Đã độ lại chuẩn Schema mới)
     applyVoucher: async (req, res) => {
         try {
-            const { code } = req.body;
+            // Yêu cầu Frontend gửi thêm tổng tiền giỏ hàng (cartTotal) lên để check
+            const { code, cartTotal } = req.body;
 
             if (!code) {
                 return res.status(400).json({ success: false, message: "Chưa nhập mã mà đòi giảm giá hả ní?" });
             }
 
-            // Tìm mã trong Database
             const voucher = await VoucherModel.findOne({
                 code: code.toUpperCase(),
                 isActive: true
@@ -32,16 +32,27 @@ module.exports = {
                 return res.status(404).json({ success: false, message: "Mã này dỏm hoặc không tồn tại!" });
             }
 
-            // 🚀 Kiểm tra xem mã đã hết hạn chưa (Dựa vào schema của ông)
+            // Check 1: Mã hết hạn chưa?
             if (new Date() > new Date(voucher.expirationDate)) {
                 return res.status(400).json({ success: false, message: "Huhu, mã này hết hạn mất rồi Chủ Tịch ơi!" });
             }
 
-            // Trả về số % được giảm
+            // Check 2: Mã còn lượt dùng không?
+            if (voucher.usedCount >= voucher.usageLimit) {
+                return res.status(400).json({ success: false, message: "Mã này đã bị người khác giành xài hết lượt rồi!" });
+            }
+
+            // Check 3: Đơn hàng có đủ tiền tối thiểu không?
+            if (cartTotal !== undefined && cartTotal < voucher.minOrderValue) {
+                return res.status(400).json({ success: false, message: `Áp mã thất bại! Đơn hàng phải từ ${voucher.minOrderValue.toLocaleString('vi-VN')} VNĐ.` });
+            }
+
+            // Trả về đúng dữ liệu chuẩn mới (Type và Value)
             res.status(200).json({
                 success: true,
                 message: "Áp dụng mã thành công! Đã giảm giá.",
-                discountPercent: voucher.discountPercent
+                discountType: voucher.discountType,
+                discountValue: voucher.discountValue
             });
 
         } catch (error) {
