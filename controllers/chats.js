@@ -27,17 +27,17 @@ module.exports = {
             let senderId = req.userId; // Người gửi là mình
             let receiverId = req.body.to; // Lấy ID người nhận từ body gửi lên
 
+            // Xác định xem gửi text hay gửi file
             let msgType = 'text';
-            let msgText = req.body.text; // Text đính kèm (VD: "📸 Đã gửi một hình ảnh đính kèm")
-            let msgImage = null; // Biến chứa link ảnh
+            let msgText = req.body.text; // Giả sử ban đầu là text
 
-            // 🚀 Nếu có upload file đính kèm (qua middleware multer)
+            // Nếu người dùng có upload file đính kèm (qua middleware multer)
             if (req.file) {
-                msgType = 'image';
-                msgImage = req.file.path; // Lưu đường dẫn ảnh từ Cloudinary/Server vào đây
+                msgType = 'file';
+                msgText = req.file.path; // Lưu đường dẫn file/ảnh vào trường text
             }
 
-            if (!msgText && !msgImage) {
+            if (!msgText) {
                 return res.status(400).send({ success: false, message: "Tin nhắn không được để trống!" });
             }
 
@@ -46,8 +46,7 @@ module.exports = {
                 receiver: receiverId,
                 messageContent: {
                     type: msgType,
-                    text: msgText,
-                    image: msgImage // 🚀 Thêm trường image để FE bốc ra vẽ thành hình
+                    text: msgText
                 }
             });
 

@@ -14,19 +14,13 @@ let chatSchema = mongoose.Schema({
     messageContent: {
         type: {
             type: String,
-            // 🚀 Thêm 'image' vào danh sách VIP được phép đi qua
-            enum: ['text', 'file', 'image'],
+            enum: ['text', 'file'],
             default: 'text'
         },
         text: {
             type: String,
             required: true
-        },
-        // 🚀 Mở thêm cái cột chứa Link Ảnh cho Backend nó lưu vô
-        image: {
-            type: String,
-            default: null
-        }
+        } // Nếu type là 'file' thì cái này sẽ lưu đường dẫn link ảnh/file
     },
     isRead: {
         type: Boolean,
