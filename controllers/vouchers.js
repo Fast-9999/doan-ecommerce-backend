@@ -50,25 +50,31 @@ module.exports = {
         }
     },
 
-    // 2. Admin tạo mã mới 
+    // 2. Admin tạo mã mới (Đã nâng cấp để hiểu tiếng của Frontend)
     createVoucher: async (req, res) => {
         try {
-            const { code, discountPercent, expirationDays = 30 } = req.body;
+            // Hốt trọn ổ dữ liệu xịn sò từ Frontend truyền lên
+            const { code, discountType, discountValue, minOrderValue, expirationDate, usageLimit } = req.body;
 
-            // Tính ngày hết hạn (mặc định 30 ngày sau nếu không truyền lên)
-            const expirationDate = new Date();
-            expirationDate.setDate(expirationDate.getDate() + expirationDays);
+            if (!code || !discountValue || !expirationDate) {
+                return res.status(400).json({ success: false, message: "Nhập thiếu thông tin rồi Chủ Tịch ơi!" });
+            }
 
             const newVoucher = await VoucherModel.create({
-                code,
-                discountPercent,
-                expirationDate
+                code: code.toUpperCase(),
+                discountType: discountType || 'percent',
+                discountValue: Number(discountValue),
+                minOrderValue: Number(minOrderValue) || 0,
+                expirationDate: new Date(expirationDate), // Lưu đúng ngày giờ FE chọn
+                usageLimit: Number(usageLimit) || 100,
+                usedCount: 0, // Mới tạo nên số người dùng = 0
+                isActive: true
             });
 
             res.status(201).json({ success: true, message: "Tạo mã thành công!", voucher: newVoucher });
         } catch (error) {
-            console.error(error);
-            res.status(500).json({ success: false, message: "Mã này bị trùng hoặc lỗi rồi" });
+            console.error("Lỗi tạo mã:", error);
+            res.status(500).json({ success: false, message: "Mã này bị trùng hoặc Database chưa cập nhật Schema!", error: error.message });
         }
     }
 };
