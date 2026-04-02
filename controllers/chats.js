@@ -26,18 +26,18 @@ module.exports = {
         try {
             let senderId = req.userId; // Người gửi là mình
             let receiverId = req.body.to; // Lấy ID người nhận từ body gửi lên
-            
-            // Xác định xem gửi text hay gửi file
-            let msgType = 'text';
-            let msgText = req.body.text; // Giả sử ban đầu là text
 
-            // Nếu người dùng có upload file đính kèm (qua middleware multer)
+            let msgType = 'text';
+            let msgText = req.body.text; // Text đính kèm (VD: "📸 Đã gửi một hình ảnh đính kèm")
+            let msgImage = null; // Biến chứa link ảnh
+
+            // 🚀 Nếu có upload file đính kèm (qua middleware multer)
             if (req.file) {
-                msgType = 'file';
-                msgText = req.file.path; // Lưu đường dẫn file/ảnh vào trường text
+                msgType = 'image';
+                msgImage = req.file.path; // Lưu đường dẫn ảnh từ Cloudinary/Server vào đây
             }
 
-            if (!msgText) {
+            if (!msgText && !msgImage) {
                 return res.status(400).send({ success: false, message: "Tin nhắn không được để trống!" });
             }
 
@@ -46,7 +46,8 @@ module.exports = {
                 receiver: receiverId,
                 messageContent: {
                     type: msgType,
-                    text: msgText
+                    text: msgText,
+                    image: msgImage // 🚀 Thêm trường image để FE bốc ra vẽ thành hình
                 }
             });
 
@@ -73,7 +74,7 @@ module.exports = {
                     $group: {
                         // Nếu mình là sender, thì gom theo receiver. Ngược lại thì gom theo sender
                         _id: {
-                            $cond: [ { $eq: ["$sender", myId] }, "$receiver", "$sender" ]
+                            $cond: [{ $eq: ["$sender", myId] }, "$receiver", "$sender"]
                         },
                         // Lấy nguyên cái tin nhắn đầu tiên (mới nhất) của nhóm đó
                         lastMessage: { $first: "$$ROOT" }
