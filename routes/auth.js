@@ -43,7 +43,9 @@ router.post('/login', async function (req, res) {
         })
         res.cookie("token", token, {
             maxAge: 60 * 60 * 1000,
-            httpOnly: true
+            httpOnly: true,
+            sameSite: 'none',
+            secure: true
         });
         res.send(token)
     } else {
@@ -59,7 +61,9 @@ router.get('/me', checkLogin, async function (req, res) {
 router.post('/logout', checkLogin, function (req, res) {
     res.cookie('token', null, {
         maxAge: 0,
-        httpOnly: true
+        httpOnly: true,
+        sameSite: 'none',
+        secure: true
     })
     res.send("da logout ")
 })
