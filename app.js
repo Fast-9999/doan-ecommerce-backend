@@ -13,11 +13,16 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-// 🚀 ĐÃ CẬP NHẬT: Cấp phép cho mọi domain (Frontend) được phép gọi API kèm Token
+// 🚀 ĐÃ CẬP NHẬT: Cho phép Frontend gửi cookie (token) kèm mọi request
 app.use(cors({
-  origin: '*', // Cho phép tất cả các trang web gọi vào
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Cho phép các hành động này
-  allowedHeaders: ['Content-Type', 'Authorization'] // Quan trọng nhất: Cho phép mang theo Token xác thực!
+  origin: [
+    'http://localhost:3000',
+    'http://localhost:3001',
+    'https://doan-ecommerce-frontend.vercel.app' // ← Đổi thành domain FE thật của bạn
+  ],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true // ← BẮT BUỘC: Cho phép trình duyệt gửi cookie cross-origin
 }));
 
 app.use(logger('dev'));
