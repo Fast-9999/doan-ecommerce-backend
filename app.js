@@ -13,16 +13,15 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-// 🚀 ĐÃ CẬP NHẬT: Cho phép Frontend gửi cookie (token) kèm mọi request
+// 🚀 CORS: Cho phép mọi Frontend gọi API + gửi cookie cross-origin
 app.use(cors({
-  origin: [
-    'http://localhost:3000',
-    'http://localhost:3001',
-    'https://doan-ecommerce-frontend.vercel.app' // ← Đổi thành domain FE thật của bạn
-  ],
+  origin: function (origin, callback) {
+    // Cho phép mọi origin (bao gồm localhost, vercel, v.v.)
+    callback(null, origin || true);
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true // ← BẮT BUỘC: Cho phép trình duyệt gửi cookie cross-origin
+  credentials: true
 }));
 
 app.use(logger('dev'));
