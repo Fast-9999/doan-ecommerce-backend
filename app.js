@@ -13,15 +13,11 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-// 🚀 CORS: Cho phép mọi Frontend gọi API + gửi cookie cross-origin
+// 🚀 ĐÃ CẬP NHẬT: Cấp phép cho mọi domain (Frontend) được phép gọi API kèm Token
 app.use(cors({
-  origin: function (origin, callback) {
-    // Cho phép mọi origin (bao gồm localhost, vercel, v.v.)
-    callback(null, origin || true);
-  },
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true
+  origin: '*', // Cho phép tất cả các trang web gọi vào
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Cho phép các hành động này
+  allowedHeaders: ['Content-Type', 'Authorization'] // Quan trọng nhất: Cho phép mang theo Token xác thực!
 }));
 
 app.use(logger('dev'));
@@ -45,9 +41,9 @@ app.use('/api/v1/auth', require('./routes/auth'));
 app.use('/api/v1/inventories', require('./routes/inventories'));
 app.use('/api/v1/carts', require('./routes/carts'));
 app.use('/api/v1/upload', require('./routes/upload'));
-app.use('/api/v1/orders', require('./routes/orders')); 
-app.use('/api/v1/reviews', require('./routes/reviews')); 
-app.use('/api/v1/vouchers', require('./routes/vouchers')); 
+app.use('/api/v1/orders', require('./routes/orders'));
+app.use('/api/v1/reviews', require('./routes/reviews'));
+app.use('/api/v1/vouchers', require('./routes/vouchers'));
 app.use('/api/v1/chats', require('./routes/chats')); // 🚀 <== ĐÃ MỞ CỔNG CHO TRUNG TÂM NHẮN TIN (CHATS)
 app.use('/api/v1/reservations', require('./routes/reservations')); // 🚀 <== CỔNG MỚI CHO GIỮ HÀNG
 
